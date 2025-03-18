@@ -1,20 +1,38 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import "./Registration.scss"; // Import styles
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"; // Import Axios
+import "./Registration.scss";
 
 const Registration = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [instrument, setInstrument] = useState("");
+  const [error, setError] = useState(""); // Handle errors
+  const navigate = useNavigate(); // Initialize navigation function
 
-  const navigate = useNavigate(); // Initialize navigate function
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ username, password, instrument });
+    setError(""); // Reset any previous errors
 
-    // Redirect to login page after submission
-    navigate("/login");
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/users/register/", {
+        username,
+        password,
+        instrument,
+      });
+
+      console.log("Registration successful:", response.data);
+      
+      // Store token for future authentication
+      localStorage.setItem("access_token", response.data.access);
+      localStorage.setItem("refresh_token", response.data.refresh);
+      
+      // Redirect to login page after success
+      navigate("/login");
+    } catch (err) {
+      console.error("Registration failed:", err.response?.data);
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -22,6 +40,9 @@ const Registration = () => {
       <div className="registration-card">
         <h2 className="registration-title">Registration</h2>
         <p className="registration-description">Create an account to get started</p>
+
+        {error && <p className="error-message">{error}</p>} {/* Display error message */}
+
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="username">Username</label>

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import "./LivePage.scss";
 import { Music, Play, Pause } from "lucide-react";
 import Button from "../ui/Button/Button";
@@ -28,11 +28,22 @@ const fullSong = [
 const LivePage = () => {
   const [isSingerView, setIsSingerView] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [userRole, setUserRole] = useState("User"); // Admin or User
+  const [userRole, setUserRole] = useState(null); 
   const lyricsRef = useRef(null);
   const scrollIntervalRef = useRef(null);
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate(); 
 
+  // Get user role from localStorage
+  useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    if (!role) {
+      navigate("/login");  // Redirect to login if no role found
+    } else {
+      setUserRole(role);
+    }
+  }, [navigate]);
+
+  // Auto-scroll functionality
   const handleScroll = (direction) => {
     if (lyricsRef.current) {
       const scrollAmount = 60;
@@ -66,11 +77,6 @@ const LivePage = () => {
   return (
     <div className="live-page">
       <div className="top-bar">
-        <div className="role-toggle">
-          <Button onClick={() => setUserRole(userRole === "Admin" ? "User" : "Admin")}>
-            Switch to {userRole === "Admin" ? "User" : "Admin"} View
-          </Button>
-        </div>
         <div className="singer-toggle">
           <label>
             <input type="checkbox" checked={isSingerView} onChange={() => setIsSingerView(!isSingerView)} />
@@ -82,7 +88,7 @@ const LivePage = () => {
       <div className="song-header">
         <h1>Imagine</h1>
         <p>by John Lennon</p>
-        {userRole === "Admin" && (
+        {userRole === "admin" && (
           <button className="quit-button" onClick={() => navigate("/main")}>
             Quit
           </button>

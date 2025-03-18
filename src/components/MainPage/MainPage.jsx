@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; 
 import "./MainPage.scss"; 
-import { Search, Music } from "lucide-react";
+import { Search, Music, LogOut } from "lucide-react"; // Added Logout icon
 import Button from "../ui/Button/Button"; 
 
 // Mock song data
@@ -17,11 +17,28 @@ const mockSongs = [
 ];
 
 export default function MainPage() {
-  const [userRole, setUserRole] = useState("User"); // Admin or User
+  const [userRole, setUserRole] = useState(null); 
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // Initialize navigation
+  // Get user role from localStorage
+  useEffect(() => {
+    const role = localStorage.getItem("userRole");
+    if (!role) {
+      navigate("/login");  // Redirect to login if no role found
+    } else {
+      setUserRole(role);
+    }
+  }, [navigate]);
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userRole");
+    navigate("/login");
+  };
+
+  // Filter songs based on search query
   const filteredSongs = mockSongs.filter(
     (song) =>
       song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -30,18 +47,19 @@ export default function MainPage() {
 
   return (
     <div className="main-container">
-      {/* Role Toggle Button */}
-      <div className="role-toggle">
-        <Button onClick={() => setUserRole(userRole === "Admin" ? "User" : "Admin")}>
-          Switch to {userRole === "Admin" ? "User" : "Admin"} View
+      {/* Top Bar with Logout Button */}
+      <div className="top-bar">
+        <h2>Music App Dashboard</h2>
+        <Button className="logout-button" onClick={handleLogout}>
+          <LogOut className="logout-icon" /> Logout
         </Button>
       </div>
 
       <div className="dashboard-card">
-        <h2>Music App Dashboard</h2>
-        <p>{userRole === "Admin" ? "Search and select songs for your users" : "View current song selection status"}</p>
+        <p>{userRole === "admin" ? "Search and select songs for your users" : "View current song selection status"}</p>
 
-        {userRole === "Admin" && (
+        {/* Admin View - Search & Select Song */}
+        {userRole === "admin" && (
           <>
             {/* Search Bar */}
             <div className="search-bar">
@@ -74,7 +92,8 @@ export default function MainPage() {
           </>
         )}
 
-        {userRole === "User" && (
+        {/* Player View - Waiting for Song */}
+        {userRole === "player" && (
           <div className="user-view">
             <div className="waiting-message">
               <Music className="music-icon" />
