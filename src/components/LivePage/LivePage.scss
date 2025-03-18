@@ -1,0 +1,115 @@
+.live-page {
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Top Navigation Bar */
+.top-bar {
+    width: 100%;
+    background: #4c2bc7;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 10px;
+    gap: 20px;
+}
+
+.singer-toggle {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.singer-toggle input {
+    margin-right: 5px;
+}
+
+/* Song Header */
+.song-header {
+    text-align: center;
+    margin-top: 20px;
+    position: relative;
+}
+
+.song-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.song-header p {
+    font-size: 18px;
+    color: #666;
+}
+
+.quit-button {
+    color: white;
+    background: red;
+    border: 2px solid;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+/* Lyrics Container */
+.lyrics-container {
+    width: 80%;
+    height: 60vh; /* Makes it fit within the viewport */
+    background: white;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Lyrics Box */
+.lyrics-box {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    padding: 10px;
+    font-size: 18px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+/* Floating Scroll Controls - Moved to Left */
+.scroll-controls {
+    position: absolute;
+    left: 10px;  /* Moved from right to left */
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Scroll & Play Buttons */
+.scroll-btn,
+.play-btn {
+    background: #4c2bc7;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.scroll-btn:hover,
+.play-btn:hover {
+    background: #3721a5;
+}
